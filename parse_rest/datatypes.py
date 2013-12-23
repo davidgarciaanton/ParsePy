@@ -227,15 +227,15 @@ class ParseResource(ParseBase, Pointer):
     def _set_created_datetime(self, value):
         self._created_at = Date(value)
 
-    def save(self, batch=False):
+    def save(self, extra_headers=None, batch=False):
         if self.objectId:
-            return self._update(batch=batch)
+            return self._update(extra_headers=extra_headers, batch=batch)
         else:
-            return self._create(batch=batch)
+            return self._create(extra_headers=extra_headers, batch=batch)
 
-    def _create(self, batch=False):
+    def _create(self, batch=False, extra_headers=None):
         uri = self.__class__.ENDPOINT_ROOT
-        response = self.__class__.POST(uri, batch=batch, **self._to_native())
+        response = self.__class__.POST(uri, extra_headers=extra_headers, batch=batch, **self._to_native())
 
         def call_back(response_dict):
             self.createdAt = self.updatedAt = response_dict['createdAt']
